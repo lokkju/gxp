@@ -20,8 +20,13 @@ var geoserverProxy = function (pattern, host, port) {
     }
 }
 
+var GEOSERVER_HOST = process.env.GEOSERVER_HOST
+var GEOSERVER_PORT = process.env.GEOSERVER_PORT || 8080
+
+if (!GEOSERVER_HOST) throw new Error('env.GEOSERVER_HOST address required');
+  
 app.use(connect.logger('dev'))
-app.use(geoserverProxy(/\/geoserver\/.*/, process.env.GEOSERVER_HOST || 'arcgisrs', process.env.GEOSERVER_PORT || 8080))
+app.use(geoserverProxy(/\/geoserver\/.*/, process.env.GEOSERVER_HOST, GEOSERVER_PORT))
 app.use(connect.favicon())
 app.use(connect.static(path.resolve(__dirname ,'../')))
 app.use(connect.directory(path.resolve(__dirname ,'../')))
@@ -29,4 +34,5 @@ app.use(connect.directory(path.resolve(__dirname ,'../')))
 app.listen(process.env.PORT || 3000, function() {
   console.log('Connect Server listening on port ' + (process.env.PORT || 3000))
   console.log('Serving content from ' + path.resolve(__dirname ,'../'))
+  console.log('Proxying /geoserver/ requests to ' + GEOSERVER_HOST + ":" + GEOSERVER_PORT + '/geoserver/')
 });
