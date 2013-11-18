@@ -16,14 +16,13 @@ var form = new gxp.LayerUploadPanel({
     },
     listeners: {
         uploadcomplete: function(panel, detail) {
-            var layers = detail.layers;
+            console.log(detail)
             var names = [];
-            for (var i=0, len=layers.length; i<len; ++i) {
-                names.push(layers[i].name);
-            }
+            var names = [];
+            Ext.each(detail.import.tasks, function(task,taskIdx) {names.push(task.layer.originalName + " saved as " + task.target.dataStore.workspace.name + ":" + task.layer.name);})
             Ext.Msg.show({
                 title: "Success",
-                msg: "Added new layer" + (len !== 1 ? "s" : "") + ": " + names.join(", "),
+                msg: "Added new layer" + (names.length !== 1 ? "s" : "") + ": <br/>" + names.join("<br/> "),
                 minWidth: 200,
                 icon: Ext.Msg.INFO,
                 buttons: Ext.Msg.OK
